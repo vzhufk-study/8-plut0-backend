@@ -1,0 +1,28 @@
+{
+  "presets": ["env"],
+  "plugins": [
+    "transform-object-rest-spread",
+    [
+      "babel-plugin-transform-builtin-extend",
+      {
+        "globals": ["Error", "Array"]
+      }
+    ]
+  ],
+  "env": {
+    "test": {
+      "plugins": [
+        "transform-es2015-modules-commonjs",
+        [
+          "transform-runtime",
+          {
+            "polyfill": false,
+            "regenerator": true
+          }
+        ]
+      ]
+    }
+  },
+  "retainLines": true,
+  "comments": false
+}
