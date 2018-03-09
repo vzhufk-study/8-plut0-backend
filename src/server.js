@@ -1,30 +1,29 @@
-import Hapi from "hapi";
+var express = require("express");
+var graphqlHTTP = require("express-graphql");
+var { buildSchema } = require("graphql");
 
-// Create a server with a host and port
-const server = Hapi.server({
-  host: "localhost",
-  port: 8000
-});
-
-// Add the route
-server.route({
-  method: "GET",
-  path: "/hello",
-  handler: (req, resp) => {
-    return "hello world";
+// Construct a schema, using GraphQL schema language
+var schema = buildSchema(`
+  type Query {
+    hello: String
   }
-});
+`);
 
-// Start the server
-async function start() {
-  try {
-    await server.start();
-  } catch (err) {
-    console.log(err);
-    process.exit(1);
+// The root provides a resolver function for each API endpoint
+var root = {
+  hello: () => {
+    return "Hello world!";
   }
+};
 
-  console.log("Server running at:", server.info.uri);
-}
-
-start();
+var app = express();
+app.use(
+  "/graphql",
+  graphqlHTTP({
+    schema: schema,
+    rootValue: root,
+    graphiql: true
+  })
+);
+app.listen(4000);
+console.log("Running a GraphQL API server at localhost:4000/graphql");
